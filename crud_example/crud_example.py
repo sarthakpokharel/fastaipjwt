@@ -1,12 +1,23 @@
 from main import APIRouter
 
-router = APIRouter(prefix='/api')
+router = APIRouter(prefix='/crud')
 
-class crud:
-    @router.get('/crud')
-    async def greet():
-        return {"message" : "hi"}
+@router.get('/')
+async def get():
+    return {"message" : "hi"}
     
-    @router.post('/crud/post')
-    async def post():
-        return{"message" : "hi"}
+@router.post('/{id}')
+async def post():
+    return{"message" : "hi"}
+
+@router.get('/{id}')
+async def get():
+    return {"message" : "hi"}
+
+@router.put('/')
+async def put():
+    return {"message" : "hi"}
+    
+@router.delete('/{id}')
+async def delete():
+    return{"message" : "hi"}
