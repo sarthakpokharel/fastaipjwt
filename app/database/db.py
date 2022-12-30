@@ -1,17 +1,19 @@
 import psycopg2
-from messages import Messages
+from app.messages import Messages
 
 message = Messages
 
-def execute_query(sql):
+def execute_query(sql, res):
     with get_db_connection() as connection:
         with connection.cursor() as cursor:
             try:
                 cursor.execute(sql)
-                users = cursor.fetchall()
-            except:
-                return message.error()
-        return users
+                if (res == True):
+                    result = cursor.fetchall()                
+                    return result
+            except Exception as e:
+                return message.custom_message(e.args[0])
+        return message.success()
 
 def get_db_connection():
     conn = psycopg2.connect(
