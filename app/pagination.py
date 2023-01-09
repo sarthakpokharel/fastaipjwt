@@ -1,4 +1,5 @@
 class Pagination:
+    #join table condition chaina yesma, need to add
     def page(table, perPage, pageNo, searchables, search_term, order_by, column_names, orand):
         base_query = "SELECT "
         count_query = base_query + "count (*)"
