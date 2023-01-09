@@ -3,7 +3,8 @@ import re
 # from app.messages import Messages
 
 # messages = Messages
-      
+     
+#need to check repeated value - code not written for this     
 class Validator:   
     
     def validation(model, required):   
@@ -16,14 +17,22 @@ class Validator:
                 if re.findall(r"<\s*script[^>]*>|<\s*/\s*script[^>]*>", value, re.IGNORECASE):
                     return {"validation_code" : 0}
                 elif re.match(r"[;-]", value):
-                #this is supposed to replace them with whitespaces not throw an wrror, change that later
+                #this is supposed to replace them with whitespaces not throw an error, change that later
                     return {"validation_code" : 0}
                 else:
                     return True
-                
-                
-                
-                
+
+
+
+
+
+
+
+
+
+
+
+            
                 
                 
                 
