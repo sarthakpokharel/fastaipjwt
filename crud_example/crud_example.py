@@ -3,12 +3,13 @@ from .crud_example_model import Users, searchables, required
 from app.database.db import execute_query
 from app.pagination import Pagination
 from app.vaidator import Validator
+from app.messages import Messages
 
 router = APIRouter(prefix='/crud', tags=['CRUD'])
 
-# crud = CRUD
 query :str
 table = "users"
+messages = Messages
 
 @router.get('/')
 async def get(): 
@@ -25,10 +26,16 @@ async def get():
     
 @router.post('/')
 async def post(model: Users):
-    # query = "INSERT INTO "+ table + " (username, email, password, user_role) VALUES ('{}', '{}', '{}', '{}');".format(model.username, model.email, model.password, model.admin_role)
-    # return execute_query (query, res = False)
-    Validator.validation(model, required)
-    # print (type(model))
+    val = Validator.validation(model, required)
+    if val is True:
+        query = "INSERT INTO "+ table + " (username, email, password, user_role) VALUES ('{}', '{}', '{}', '{}');".format(model.username, model.email, model.password, model.admin_role)
+        return execute_query (query, res = False)
+    elif val is False:
+        return messages.custom_message('Field cannot be empty:')
+    elif val['validation_code'] == 0:
+        return messages.custom_message('No Way!')
+    else:
+        return messages.custom_message("Unknown Error")
 
 @router.get('/{id}')
 async def get():
