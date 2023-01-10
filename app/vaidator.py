@@ -1,25 +1,36 @@
-from fastapi import Query, HTTPException
+# from fastapi import Query, HTTPException
+from app.database import db
 import re
 # from app.messages import Messages
 
 # messages = Messages
-     
-#need to check repeated value - code not written for this     
+    
 class Validator:   
     
-    def validation(model, required):   
+    def validation(model, required, table):   
         for key, value in model.items():
             if value == "":
                 for r in required:
                     if r.lower() == key.lower():
-                        return False                
+                        return {"validation_code" : False,
+                                "message": key +" cannot be empty"
+                                }                
             else:
                 if re.findall(r"<\s*script[^>]*>|<\s*/\s*script[^>]*>", value, re.IGNORECASE):
-                    return {"validation_code" : 0}
-                elif re.match(r"[;-]", value):
+                    return {"validation_code" : 0,
+                            "message": "Script tag not allowed"
+                            }
+                elif re.findall(r"[;-]", value):
                 #this is supposed to replace them with whitespaces not throw an error, change that later
-                    return {"validation_code" : 0}
+                    return {"validation_code" : 0,
+                            "message": "; - special characters not allowed"
+                            }
                 else:
+                    query = "SELECT " + key + " FROM " + table +" WHERE " + key + " = '" + value + "';"
+                    if len(db.execute_query(query, res=True))>0:
+                        return {"validation_code" : 1,
+                                "message": "'"+value + "' already exists in " + key
+                                }             
                     return True
 
 

@@ -30,15 +30,16 @@ async def get():
     
 @router.post('/')
 async def post(model: Users):
-    val = Validator.validation(model, required)
-    #need to check repeated value - code not written for this
+    val = Validator.validation(model, required, table)
     if val is True:
         query = "INSERT INTO "+ table + " (username, email, password, user_role) VALUES ('{}', '{}', '{}', '{}');".format(model.username, model.email, en.encrypt(model.password), model.admin_role)
         return execute_query (query, res = False)
-    elif val is False:
-        return messages.custom_message('Field cannot be empty:')
+    elif val['validation_code'] is False:
+        return messages.custom_message(val['message'])
     elif val['validation_code'] == 0:
-        return messages.custom_message("Don't Even....")
+        return messages.custom_message(val['message'])
+    elif val['validation_code'] == 1:
+        return messages.custom_message(val['message'])
     else:
         return messages.custom_message("Unknown Error")
 
