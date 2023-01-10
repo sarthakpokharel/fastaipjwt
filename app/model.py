@@ -1,25 +1,26 @@
 from pydantic import BaseModel
 
 class UserSchema(BaseModel):
-    fullname: str 
+    username: str 
     email : str
     password: str
-    class Config:
-            the_schema = {
-                "userdemo" : {
-                "name" : "Bek",
-                "email": "help@beckbrace.com",
-                "password": "123"
-                }
-            }
+    user_role:str
+    # class Config:
+    #         the_schema = {
+    #             "userdemo" : {
+    #             "name" : "Bek",
+    #             "email": "help@beckbrace.com",
+    #             "password": "123"
+    #             }
+    #         }
 
 class UserLoginSchema(BaseModel):
-    email : str
+    username : str
     password: str
-    class Config:
-            the_schema = {
-                "userdemo" : {
-                "email": "help@beckbrace.com",
-                "password": "123"
-                }
-            }
+    # class Config:
+    #         the_schema = {
+    #             "userdemo" : {
+    #             "email": "help@beckbrace.com",
+    #             "password": "123"
+    #             }
+    #         }

@@ -14,10 +14,11 @@ def token_response(token: str):
 	}
 
 #Function used for signing the JWT string
-def signJWT(userID : str):
+def signJWT(username : str, user_role:str):
 	payload = {
-	'userID': userID,
-	"expiry" : time.time() + 600
+	'username': username,
+	'user_role': user_role,
+	"expiry" : time.time() + 86400 #24 hours after login
 	}
 	token = jwt.encode(payload, JWT_SECRET, algorithm=JWT_ALGORITHM)
 	return token_response(token)
@@ -30,3 +31,19 @@ def decodeJWT(token: str):
 		return decode_token if decode_token['expires'] >= time.time() else None
 	except:
 		return {}
+
+
+
+#This part is an INCOMPLETE CODE
+def current_user_info(token: str):
+    #check validity of token
+    try:
+        payload = jwt.decode(token, JWT_SECRET, algorithm=[JWT_ALGORITHM])
+        username = payload.get('username')
+        user_role = payload.get('user_role')
+        expiry = payload.get('expiry')
+        if expiry < time.time():
+            raise jwt.ExpiredSignatureError
+    except (jwt.DecodeError, jwt.ExpiredSignatureError):
+        raise ValueError("Invalid Token")
+    return username, user_role, expiry
