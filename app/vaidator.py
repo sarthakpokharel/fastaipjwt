@@ -27,7 +27,7 @@ class Validator:
                             }
                 else:
                     query = "SELECT " + key + " FROM " + table +" WHERE " + key + " = '" + value + "';"
-                    if len(db.execute_query(query, res=True))>0:
+                    if len(db.execute_query(query, None, res=True))>0:
                         return {"validation_code" : 1,
                                 "message": "'"+value + "' already exists in " + key
                                 }             

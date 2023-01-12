@@ -23,8 +23,8 @@ async def get():
     orand = "OR"
     column_names = ['username', 'email', 'user_role']
     queries = Pagination.page(table, perPage, pageNo, searchables, search_term, order_by, column_names, orand)
-    get_data= execute_query(queries['base_query'], res=True)
-    count_value= execute_query(queries['count_query'], res=True)
+    get_data= execute_query(queries['base_query'], None,res=True)
+    count_value= execute_query(queries['count_query'],None, res=True)
     return {"data": get_data , "count_value" : count_value}
     
     
@@ -32,8 +32,9 @@ async def get():
 async def post(model: Users):
     val = Validator.validation(model, required, table)
     if val is True:
-        query = "INSERT INTO "+ table + " (username, email, password, user_role) VALUES ('{}', '{}', '{}', '{}');".format(model.username, model.email, en.encrypt(model.password), model.admin_role)
-        return execute_query (query, res = False)
+        query = "INSERT INTO "+ table + " (username, email, password, user_role) VALUES (%s, %s, %s, %s);"
+        params = (model.username, model.email, en.encrypt(model.password), model.admin_role)
+        return execute_query (query,params, res = False)
     elif val['validation_code'] is False:
         return messages.custom_message(val['message'])
     elif val['validation_code'] == 0:
@@ -45,8 +46,8 @@ async def post(model: Users):
 
 @router.get('/{id}')
 async def get():
-    query = "SELECT username, email FROM " +table+ " WHERE id = " + {id} +" );"
-    return execute_query(query)
+    query = "SELECT username, email FROM %s WHERE id %s);"
+    return execute_query(query,(table,{id}), res=True)
 
 @router.put('/{id}')
 async def put(model : Users):

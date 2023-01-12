@@ -4,11 +4,11 @@ from decouple import config
 
 message = Messages
 
-def execute_query(sql, res):
+def execute_query(sql, params, res):
     with get_db_connection() as connection:
         with connection.cursor() as cursor:
             try:
-                cursor.execute(sql)
+                cursor.execute(sql, params)
                 if (res == True):
                     result = cursor.fetchall()                
                     return result
